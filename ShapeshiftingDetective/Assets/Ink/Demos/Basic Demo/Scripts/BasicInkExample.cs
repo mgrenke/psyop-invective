@@ -1,20 +1,22 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using Ink.Runtime;
 
 // This is a super bare bones example of how to play and display a ink story in Unity.
 public class BasicInkExample : MonoBehaviour {
     public static event Action<Story> OnCreateStory;
 	
-    void Awake () {
+    /*void Awake () {
 		// Remove the default message
 		RemoveChildren();
 		StartStory();
-	}
+	}*/
 
 	// Creates a new Story object with the compiled story which we can then play!
-	void StartStory () {
+	public void StartStory () {
 		story = new Story (inkJSONAsset.text);
         if(OnCreateStory != null) OnCreateStory(story);
 		RefreshView();
@@ -50,9 +52,10 @@ public class BasicInkExample : MonoBehaviour {
 		}
 		// If we've read all the content and there's no choices, the story is finished!
 		else {
-			Button choice = CreateChoiceView("End of story.\nRestart?");
+			Button choice = CreateChoiceView("...");
+			var dialogueManager = FindObjectOfType<DialogueManager>();
 			choice.onClick.AddListener(delegate{
-				StartStory();
+				dialogueManager.EndDialogue();
 			});
 		}
 	}
@@ -65,8 +68,9 @@ public class BasicInkExample : MonoBehaviour {
 
 	// Creates a textbox showing the the line of text
 	void CreateContentView (string text) {
-		Text storyText = Instantiate (textPrefab) as Text;
-		storyText.text = text;
+		storyText = Instantiate (textPrefab) as Text;
+		StopAllCoroutines();
+		StartCoroutine(TypeSentence(text));
 		storyText.transform.SetParent (canvas.transform, false);
 	}
 
@@ -78,7 +82,7 @@ public class BasicInkExample : MonoBehaviour {
 		
 		// Gets the text from the button prefab
 		Text choiceText = choice.GetComponentInChildren<Text> ();
-		choiceText.text = text;
+		choiceText.text = "> " + text;
 
 		// Make the button expand to fit the text
 		HorizontalLayoutGroup layoutGroup = choice.GetComponent <HorizontalLayoutGroup> ();
@@ -95,9 +99,37 @@ public class BasicInkExample : MonoBehaviour {
 		}
 	}
 
+	IEnumerator TypeSentence(string sentence)
+    {
+        storyText.text = "";
+        foreach(char letter in sentence.ToCharArray())
+        {
+            storyText.text += letter;
+            yield return new WaitForSeconds(0.02f);			
+        }
+    }
+
+
+	/*void ParseTags()
+	{
+		tags = story.currentTags;
+		foreach(string t in tags)
+		{
+			string prefix = t.Split(' ')[0];
+			string param = t.Split(' ')[1];
+
+			switch(prefix.ToLower())
+			{
+				
+			}
+		}
+	}*/
+
 	[SerializeField]
 	private TextAsset inkJSONAsset = null;
 	public Story story;
+	List<string> tags;
+	Text storyText;
 
 	[SerializeField]
 	private Canvas canvas = null;
@@ -107,4 +139,9 @@ public class BasicInkExample : MonoBehaviour {
 	private Text textPrefab = null;
 	[SerializeField]
 	private Button buttonPrefab = null;
+
+	public TextAsset InkJSONAsset 
+	{
+		set { inkJSONAsset = value; }
+	}
 }

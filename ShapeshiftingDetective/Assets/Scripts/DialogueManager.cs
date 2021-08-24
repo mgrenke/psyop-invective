@@ -2,52 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Ink.Runtime;
 
 public class DialogueManager : MonoBehaviour
 {
     public Text nameText;
-    public Text dialogueText;
     public Image portraitImage;
+    public Canvas canvas;
     public Animator animator;
 
-    private Queue<string> sentences;
-    // Start is called before the first frame update
+    private PlayerController player;
+
     void Start()
     {
-        sentences = new Queue<string>();
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
     }
 
     public void StartDialogue(Dialogue dialogue)
     {
         animator.SetBool("isOpen", true);
+        player.IsTalking = true;
 
         nameText.text = dialogue.name;
         portraitImage = dialogue.portrait;
 
-        sentences.Clear();
-
-        foreach(string sentence in dialogue.sentences)
-        {
-            sentences.Enqueue(sentence);
-        }
-
-        DisplayNextSentence();
+        canvas.GetComponent<BasicInkExample>().InkJSONAsset = dialogue.inkFile;
+        canvas.GetComponent<BasicInkExample>().StartStory();
     }
 
-    public void DisplayNextSentence()
-    {
-        if(sentences.Count == 0)
-        {
-            EndDialogue();
-            return;
-        }
-
-        string sentence = sentences.Dequeue();
-        StopAllCoroutines();
-        StartCoroutine(TypeSentence(sentence));
-    }
-
-    IEnumerator TypeSentence(string sentence)
+    /*IEnumerator TypeSentence(string sentence)
     {
         dialogueText.text = "";
         foreach(char letter in sentence.ToCharArray())
@@ -55,10 +38,11 @@ public class DialogueManager : MonoBehaviour
             dialogueText.text += letter;
             yield return null;
         }
-    }
+    }*/
 
-    void EndDialogue()
+    public void EndDialogue()
     {
         animator.SetBool("isOpen", false);
+        player.IsTalking = false;
     }
 }

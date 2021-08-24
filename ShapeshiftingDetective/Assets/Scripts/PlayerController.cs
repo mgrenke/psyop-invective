@@ -10,6 +10,12 @@ public class PlayerController : MonoBehaviour
     public NavMeshAgent agent;
     public ThirdPersonCharacter character;
 
+    private bool isTalking = false;
+
+    public bool IsTalking{
+        set { isTalking = value; }
+    }
+
     void Start()
     {
         cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
@@ -20,7 +26,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !isTalking)
         {
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
