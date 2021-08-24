@@ -8,8 +8,10 @@ public class LevelGenerator : MonoBehaviour {
 
 	public GameObject wall;
 	public GameObject player;
+	public GameObject key;
 
 	private bool playerSpawned = false;
+	private bool keySpawned = false;
 
 	// Use this for initialization
 	void Start () {
@@ -37,6 +39,12 @@ public class LevelGenerator : MonoBehaviour {
 					Vector3 pos = new Vector3(x - width / 2f, 1.25f, y - height / 2f);
 					Instantiate(player, pos, Quaternion.identity);
 					playerSpawned = true;
+				}
+				else if(!keySpawned)
+				{
+					Vector3 pos = new Vector3(x - width / 2f, 1f, y - height / 2f);
+					Instantiate(key, pos, Quaternion.identity, transform);
+					keySpawned = true;
 				}
 			}
 		}

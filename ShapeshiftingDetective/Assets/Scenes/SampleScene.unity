@@ -745,6 +745,7 @@ MonoBehaviour:
   height: 18
   wall: {fileID: 4900207811802872567, guid: f6b1d9a2bb669574b8d0efb425254fc2, type: 3}
   player: {fileID: 1004156199844653108, guid: 526fca28cd290fc41b8c8cf18b02a222, type: 3}
+  key: {fileID: 5022298935112540078, guid: ef60c78069fcc6b4aa79d2e17608a1f9, type: 3}
 --- !u!4 &714520268
 Transform:
   m_ObjectHideFlags: 0
@@ -1265,6 +1266,7 @@ GameObject:
   - component: {fileID: 1201283102}
   - component: {fileID: 1201283104}
   - component: {fileID: 1201283103}
+  - component: {fileID: 1201283106}
   m_Layer: 0
   m_Name: MainCamera
   m_TagString: MainCamera
@@ -1369,6 +1371,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 36.813, y: -134.341, z: 1.638}
+--- !u!114 &1201283106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1201283101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad8c6d0cdceb753429cb33f780080fe9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1 &1249288687
 GameObject:
   m_ObjectHideFlags: 0
