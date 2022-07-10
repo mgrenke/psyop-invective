@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using DialogueEditor;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.EventSystems;
 using UnityStandardAssets.Characters.ThirdPerson;
 
 public class PlayerController : MonoBehaviour
@@ -9,12 +11,6 @@ public class PlayerController : MonoBehaviour
     public Camera cam;
     public NavMeshAgent agent;
     public ThirdPersonCharacter character;
-
-    private bool isTalking = false;
-
-    public bool IsTalking{
-        set { isTalking = value; }
-    }
 
     void Start()
     {
@@ -26,8 +22,14 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && !isTalking)
+        if (Input.GetMouseButtonDown(0))
         {
+            if(EventSystem.current.IsPointerOverGameObject())
+                return;
+            
+            if(ConversationManager.Instance.IsConversationActive)
+                ConversationManager.Instance.EndConversation();
+            
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
