@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 8906374488523206245}
   - component: {fileID: 6264341220792863182}
   - component: {fileID: 3782301362796550688}
+  - component: {fileID: 1498092893}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -32,6 +33,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8459449148277309557}
   m_Father: {fileID: 0}
@@ -50,8 +52,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 0}
-  agent: {fileID: 1004156199844653109}
-  character: {fileID: 0}
+  focus: {fileID: 0}
 --- !u!195 &1004156199844653109
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -106,7 +107,7 @@ CapsuleCollider:
   m_Center: {x: 0, y: 1, z: 0}
 --- !u!95 &6264341220792863182
 Animator:
-  serializedVersion: 3
+  serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -119,6 +120,7 @@ Animator:
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
@@ -143,6 +145,18 @@ MonoBehaviour:
   m_MoveSpeedMultiplier: 1
   m_AnimSpeedMultiplier: 1
   m_GroundCheckDistance: 0.2
+--- !u!114 &1498092893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1004156199844653108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca9ccea3b7d947e097eece3e6344eebc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &8459449148277185271
 PrefabInstance:
   m_ObjectHideFlags: 0

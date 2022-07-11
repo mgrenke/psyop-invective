@@ -2,26 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using DialogueEditor;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.EventSystems;
-using UnityStandardAssets.Characters.ThirdPerson;
 
 public class PlayerController : MonoBehaviour
 {
     public Camera cam;
-    public NavMeshAgent agent;
-    public ThirdPersonCharacter character;
+    private PlayerMotor _motor;
+    public Interactable focus;
 
     void Start()
     {
-        cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
-        agent.updateRotation = false;
-        character = gameObject.GetComponent<ThirdPersonCharacter>();
+        cam = Camera.main;
+        _motor = GetComponent<PlayerMotor>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        // LMB is responsible for movement
         if (Input.GetMouseButtonDown(0))
         {
             if(EventSystem.current.IsPointerOverGameObject())
@@ -35,17 +33,49 @@ public class PlayerController : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit))
             {
-                agent.SetDestination(hit.point);
+                _motor.MoveToPoint(hit.point);
+                RemoveFocus();
             }
         }
+        
+        // RMB is responsible for interaction
+        if (Input.GetMouseButtonDown(1))
+        {
+            if(EventSystem.current.IsPointerOverGameObject())
+                return;
 
-        if (agent.remainingDistance > agent.stoppingDistance)
-        {
-            character.Move(agent.desiredVelocity, false, false);
+            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit))
+            {
+                Interactable interactable = hit.collider.GetComponent<Interactable>();
+                if (interactable != null)
+                    SetFocus(interactable);
+            }
         }
-        else
+    }
+
+    void SetFocus(Interactable newFocus)
+    {
+        if (newFocus != focus)
         {
-            character.Move(Vector3.zero, false, false);
+            if(focus != null)
+                focus.OnDefocus();
+            
+            focus = newFocus;
+            _motor.FollowTarget(newFocus);
         }
+
+        newFocus.OnFocus(transform);
+    }
+
+    void RemoveFocus()
+    {
+        if(focus != null)
+            focus.OnDefocus();
+        
+        focus = null;
+        _motor.StopFollowingTarget();
     }
 }
