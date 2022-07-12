@@ -9,7 +9,10 @@ using UnityEngine.SceneManagement;
 public class PauseMenu : MonoBehaviour
 {
     public static bool gameIsPaused;
-    public GameObject pauseMenuUI;
+    [SerializeField]
+    private GameObject pauseMenuUI;
+    [SerializeField]
+    private LevelLoader levelLoader;
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -38,7 +41,7 @@ public class PauseMenu : MonoBehaviour
     public void LoadMenu()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("MainMenu");
+        StartCoroutine(levelLoader.LoadLevel(0));
     }
 
     public void QuitGame()
