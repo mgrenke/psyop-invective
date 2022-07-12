@@ -4,31 +4,21 @@ using UnityEngine;
 
 [RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(MeshRenderer))]
-public class Switch : MonoBehaviour
+public class Switch : Interactable
 {
     public TriggerAction action = TriggerAction.Trigger;
     public Triggerable[] targets;
 
-    public Material activeMaterial;
-    public Material inactiveMaterial;
+    // Fix repetitive code (go to Trigger.cs)
+    [Header("Item Required To Trigger")]
+    public string requiredItemName = "";
+    public bool takeItem;
 
-    private MeshRenderer _renderer;
-    private bool _pressed;
-
-    void Awake ()
+    public override void Interact()
     {
-        _renderer = GetComponent<MeshRenderer>();
-        _renderer.sharedMaterial = activeMaterial;
-    }
-
-    void OnCollisionEnter (Collision collision)
-    {
-        if (!_pressed && collision.gameObject.CompareTag("Player"))
-        {
-            _renderer.sharedMaterial = inactiveMaterial;
-            _pressed = true;
+        Inventory inv = Inventory.instance;
+        if (inv != null && inv.HasItem(requiredItemName, takeItem))
             TriggerTargets(action);
-        }
     }
 
     public void TriggerTargets (TriggerAction action)

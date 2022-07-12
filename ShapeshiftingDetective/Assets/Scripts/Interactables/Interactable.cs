@@ -20,8 +20,7 @@ public class Interactable : MonoBehaviour {
 
     private void Start()
     {
-        if (interactionTransform == null)
-            interactionTransform = transform;
+        ValidateInteractionTransform();
     }
 
     void Update ()
@@ -34,8 +33,7 @@ public class Interactable : MonoBehaviour {
             {
                 // Interact with the object
                 _hasInteracted = true;
-                ItemPickup item = GetComponent<ItemPickup>();
-                item.Interact();
+                Interact();
             }
         }
     }
@@ -57,15 +55,23 @@ public class Interactable : MonoBehaviour {
     }
 
     // This method is meant to be overwritten
-    public virtual void Interact ()
+    public virtual void Interact()
     {
-		
+        
     }
 
     void OnDrawGizmosSelected ()
     {
+        ValidateInteractionTransform();
+        
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(interactionTransform.position, radius);
+    }
+
+    void ValidateInteractionTransform()
+    {
+        if (interactionTransform == null)
+            interactionTransform = transform;
     }
 
 }

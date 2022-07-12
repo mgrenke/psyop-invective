@@ -22,7 +22,7 @@ public class Trigger : MonoBehaviour
         {
             if (!string.IsNullOrEmpty(requiredItemName))
             {
-                Inventory inv = other.gameObject.GetComponent<Inventory>();
+                Inventory inv = Inventory.instance;
                 if (inv != null && inv.HasItem(requiredItemName, takeItem))
                 {
                     TriggerTargets(action);
