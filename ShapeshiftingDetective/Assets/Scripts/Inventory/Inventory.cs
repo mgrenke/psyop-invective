@@ -47,4 +47,19 @@ public class Inventory : MonoBehaviour
         if(onItemChangedCallback != null)
             onItemChangedCallback.Invoke();
     }
+
+    public bool HasItem(string requiredItemName, bool takeItem)
+    {
+        for (var i = 0; i < items.Count; i++)
+        {
+            if (String.CompareOrdinal(items[i].name, requiredItemName) == 0)
+            {
+                if (takeItem)
+                    instance.Remove(items[i]);
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
