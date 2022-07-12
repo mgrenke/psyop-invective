@@ -19,7 +19,7 @@ public class ColorOnHover : MonoBehaviour {
 	void OnMouseEnter ()
 	{
 		foreach (Material mat in meshRenderer.materials) {
-			mat.color *= color;
+			mat.color = color;
 		}
 
 	}
