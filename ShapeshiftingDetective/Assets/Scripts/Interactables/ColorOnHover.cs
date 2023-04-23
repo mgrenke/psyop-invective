@@ -5,7 +5,7 @@ using System.Linq;
 public class ColorOnHover : MonoBehaviour {
 
 	public Color color;
-	public Renderer meshRenderer;
+	private Renderer meshRenderer;
 
 	Color[] originalColours;
 
