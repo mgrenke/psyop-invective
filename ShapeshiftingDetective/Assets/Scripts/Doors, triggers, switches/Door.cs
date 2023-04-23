@@ -5,6 +5,13 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Door : Triggerable
 {
+    public Transform hinge;
+    public bool slidingDoor = false;
+    public bool doorIsOpen = false;
+    public float currentAngle = 0f;
+    public float endAngle = 90f;
+    public float swingSpeed = 40f;
+
     [Header("Movement")]
     public float moveSpeed = 5f;
     public Vector3 moveOffset;
@@ -19,6 +26,7 @@ public class Door : Triggerable
     {
         _rigidbody = GetComponent<Rigidbody>();
         _rigidbody.isKinematic = true;
+        hinge = GetComponentInChildren<Hinge>().transform;
 
         Validate();
     }
@@ -49,16 +57,25 @@ public class Door : Triggerable
             _targetPosition = (action == TriggerAction.Deactivate) ? _startPosition : _endPosition;
         }
 
-
         if (_update != null)
         {
             StopCoroutine(_update);
             _update = null;
         }
-        _update = StartCoroutine(MoveToTarget());
+
+        if(!slidingDoor)
+        {
+            _update = StartCoroutine(SwingOpen());
+        }
+
+        else
+        {
+            _update = StartCoroutine(MoveToTarget());
+        }
     }
 
     // The door only needs to update when opening or closing
+    // Should be used in case of a sliding door.
     IEnumerator MoveToTarget ()
     {
         while (true)
@@ -82,6 +99,58 @@ public class Door : Triggerable
 
         _rigidbody.MovePosition(_targetPosition);
         _update = null;
+    }
+
+IEnumerator SwingOpen ()
+    {
+        currentAngle = transform.rotation.y;        
+
+        if (!doorIsOpen)
+        {
+            endAngle = 90f;
+            while (true)
+            {
+                // Keep moving towards target until we are close enough
+                if (currentAngle < endAngle)
+                {
+                    currentAngle = transform.rotation.eulerAngles.y + (swingSpeed * Time.deltaTime);
+                    if (currentAngle > 360f) currentAngle -= 360f;
+                    transform.RotateAround(hinge.position, Vector3.up, swingSpeed * Time.deltaTime);
+                    yield return null;
+                }
+                else
+                {
+                    doorIsOpen = !doorIsOpen;
+                    break;
+                }
+            }
+            //transform.RotateAround(hinge.position, Vector3.up, swingSpeed * Time.deltaTime);       
+            _update = null;
+        }
+        
+        else
+        {
+            endAngle = 0f;
+            while (true)
+            {
+                // Keep moving towards target until we are close enough
+                if (currentAngle > endAngle)
+                {
+                    currentAngle = transform.rotation.eulerAngles.y - (swingSpeed * Time.deltaTime);
+                    if (currentAngle > 360f) currentAngle -= 360f;
+                    transform.RotateAround(hinge.position, Vector3.up, -1f * swingSpeed * Time.deltaTime);
+                    yield return null;
+                }
+                else
+                {
+                    doorIsOpen = !doorIsOpen;
+                    break;
+                }
+            }
+            //transform.RotateAround(hinge.position, Vector3.up, -1f * swingSpeed * Time.deltaTime);       
+            _update = null;
+        }
+
     }
 
     // This will make setting up the door movement in editor much easier
